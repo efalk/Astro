@@ -52,9 +52,8 @@ typedef	struct	{
 	} Elements ;
 
 
-static
-range(x)
-double *x ;
+static void
+range(double *x)
 {
 	while( *x < 0. ) *x += 360. ;
 	if( *x >= 360. ) *x -= (int)*x/360*360 ;
@@ -63,11 +62,8 @@ double *x ;
 
 	/* utility: return orbital elements, units in degrees */
 
-static
-getElements(el, date, p)
-	Elements *el ;
-	double	date ;
-	PlanetState *p ;
+static void
+getElements(Elements *el, double date, PlanetState *p)
 {
 	double	T,T2,T3 ;
 
@@ -112,9 +108,8 @@ anomaly(date, m0,m1,m2)
 
 	/* utility: given planetary elements, compute lat,lon,R */
 
-static
-planet(p)
-	PlanetState *p ;
+static void
+planet(PlanetState *p)
 {
 	double	E,v ;		/* eccentric,true anomaly, radians */
 	double	u ;		/* argument of latitude */
@@ -324,11 +319,10 @@ Uranus(date, p)
 	double	T = (date - 2415020.0) / 36525. ;
 	double	u,P,Q,S,W ;
 	double	G,H ;
-	double	M ;
 	double	tau, mu, theta ;
 	double	A,B ;
 	double	ec ;
-	double	la,lo,r ;
+	double	r;
 
 	getElements(&uranus, date, p) ;
 
@@ -437,7 +431,7 @@ Neptune(date, p)
 	planet(p) ;
 }
 
-	/* TODO: */
+#ifdef	TODO
 static	Elements pluto = {
 	  95.3113544,	.3980332167,	0.0,	0.0,
 	  224.017,	0.0,		0.0,	0.0,
@@ -450,4 +444,5 @@ static	Elements pluto = {
 	  8.2,
 	  1.0
 	} ;
+#endif	/* TODO */
 

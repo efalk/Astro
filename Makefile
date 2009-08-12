@@ -1,6 +1,6 @@
 
-CFLAGS = -g -Wall -Werror
-#CFLAGS = -O
+#CFLAGS = -g -Wall -Werror
+CFLAGS = -O
 
 LIBS = -lm
 

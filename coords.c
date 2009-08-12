@@ -80,7 +80,6 @@ ecliptic2equat(lat,lon, decl,RA, jdate)
 {
 	double	e ;	/* obliquity of ecliptic */
 	double	d,r ;
-	double x,y,z, xe,ye,ze ;
 
 	e = obliquity(jdate) ;
 

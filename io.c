@@ -1,4 +1,5 @@
 
+#include <stdio.h>
 #include <sys/types.h>
 #include <time.h>
 #include <math.h>
@@ -59,7 +60,7 @@ static	char	*mnames[] = { "", "Jan", "Feb", "Mar", "Apr", "May",
 
 	rvalNext() ;
 	julian2date(jdate, &y,&m,&d) ;
-	sprintf(rval, "%d-%s-%d", d,mnames[m],y) ;
+	snprintf(rval, sizeof(rval), "%d-%s-%d", d,mnames[m],y) ;
 	return rval ;
 }
 
@@ -70,12 +71,15 @@ julian2hmsStr(jdate)
 {
 	int	y,m,d, hh,mm ;
 	double	ss ;
+#if 0
 static	char	*mnames[] = { "", "Jan", "Feb", "Mar", "Apr", "May",
 		  "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"} ;
+#endif
 
 	rvalNext() ;
 	julian2time(jdate, &y,&m,&d, &hh,&mm,&ss) ;
-	sprintf(rval, "%d:%2.2d:%2.2d.%d", hh,mm,(int)ss, (int)(ss*10+.5)%10) ;
+	snprintf(rval, sizeof(rval),
+	  "%d:%2.2d:%2.2d.%d", hh,mm,(int)ss, (int)(ss*10+.5)%10) ;
 	return rval ;
 }
 
@@ -91,7 +95,8 @@ static	char	*mnames[] = { "", "Jan", "Feb", "Mar", "Apr", "May",
 
 	rvalNext() ;
 	julian2time(jdate, &y,&m,&d, &hh,&mm,&ss) ;
-	sprintf(rval, "%d-%s-%d %d:%2.2d:%2.2d", d,mnames[m],y, hh,mm,(int)ss) ;
+	snprintf(rval, sizeof(rval),
+	  "%d-%s-%d %d:%2.2d:%2.2d", d,mnames[m],y, hh,mm,(int)ss) ;
 	return rval ;
 }
 
@@ -107,7 +112,7 @@ deg2dmsStr(degrees)
 	m = (int)(degrees * 60) % 60 ;
 	s = (int)(degrees * 3600) % 60 ;
 	ss = (int)(degrees * 36000 + .5) % 10 ;
-	sprintf(rval, "%3.3d°%2.2d'%2.2d.%1.1d", d,m,s,ss) ;
+	snprintf(rval, sizeof(rval), "%3.3d°%2.2d'%2.2d.%1.1d", d,m,s,ss) ;
 	return rval ;
 }
 
@@ -127,7 +132,7 @@ deg2dmStr(degrees)
 	d = degrees ;
 	m = (int)(degrees * 60) % 60 ;
 	mm = (int)(degrees * 6000 + .5) % 100 ;
-	sprintf(rval, "%s%d°%2.2d.%2.2d", sign?"-":"", d,m,mm) ;
+	snprintf(rval, sizeof(rval), "%s%d°%2.2d.%2.2d", sign?"-":"", d,m,mm) ;
 	return rval ;
 }
 
@@ -143,7 +148,7 @@ hours2hmsStr(hours)
 	m = (int)(hours * 60) % 60 ;
 	s = (int)(hours * 3600) % 60 ;
 	ss = (int)(hours * 36000 + .5) % 10 ;
-	sprintf(rval, "%2d:%2.2d:%2.2d.%1.1d", h,m,s,ss) ;
+	snprintf(rval, sizeof(rval), "%2d:%2.2d:%2.2d.%1.1d", h,m,s,ss) ;
 	return rval ;
 }
 
@@ -158,6 +163,6 @@ hours2hmStr(hours)
 	h = hours ;
 	m = (int)(hours * 60) % 60 ;
 	mm = (int)(hours * 6000 + .5) % 100 ;
-	sprintf(rval, "%2d:%2.2d.%2.2d", h,m,mm) ;
+	snprintf(rval, sizeof(rval), "%2d:%2.2d.%2.2d", h,m,mm) ;
 	return rval ;
 }

@@ -1,4 +1,5 @@
 
+#include <stdio.h>
 #include <sys/types.h>
 #include <time.h>
 #include <math.h>
@@ -12,8 +13,7 @@
 	/* works for degrees too */
 
 char	*
-convertHms(hours)
-	double	hours ;
+convertHms(double hours)
 {
 static	char	obuf[80] ;
 
@@ -21,7 +21,7 @@ static	char	obuf[80] ;
 	double	s ;
 
 	h2hms(hours, &h,&m,&s) ;
-	sprintf(obuf, "%d:%2.2d:%f", h,m,s) ;
+	snprintf(obuf, sizeof(obuf), "%d:%2.2d:%f", h,m,s) ;
 	return obuf ;
 }
 

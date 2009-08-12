@@ -268,7 +268,7 @@ date2yday(y,m,d)
 	int	y,m,d ;
 {
 	/* if it's not a leap year */
-	if( y%4 != 0  ||  y%100 == 0 && y%400 != 0 )
+	if( y%4 != 0  ||  (y%100 == 0 && y%400 != 0) )
 	  return (275*m/9) - 2*((m+9)/12) + d - 30 ;
 	else
 	  return (275*m/9) - ((m+9)/12) + d - 30 ;
@@ -282,7 +282,7 @@ yday2date(y,yday, m,d)
 	int	a,b,c,e ;
 
 	/* if it's not a leap year */
-	if( y%4 != 0  ||  y%100 == 0 && y%400 != 0 )
+	if( y%4 != 0  ||  (y%100 == 0 && y%400 != 0) )
 	  a = 1889 ;
 	else
 	  a = 1523 ;

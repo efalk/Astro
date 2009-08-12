@@ -41,7 +41,6 @@ SunEcliptic(jdate, lat,lon,rad)
 	double	L ;		/* geometric mean longitude of Sun */
 	double	M ;		/* Sun's mean anomoly */
 	double	e ;		/* eccentricity of Earth's orbit */
-	double	E ;		/* eccentric anomoly */
 	double	v ;		/* true anomoly */
 	double	C ;		/* Sun's equation of center */
 	double	R ;		/* Sun's radius vector */

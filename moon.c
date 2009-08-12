@@ -11,9 +11,8 @@
 
 #define	degrees	* RAD
 
-static
-range(x)
-double *x ;
+static inline void
+range(double *x)
 {
 	while( *x < 0. ) *x += 360. ;
 	if( *x >= 360. ) *x -= (int)*x/360*360 ;
@@ -267,7 +266,6 @@ Moon(date, m)
 	double	F ;		/* mean distance of moon from ascending node */
 	double	M ;		/* sun's mean longitude */
 	double	e,e2 ;		/* Meeus doesn't explain this */
-	double	s ;
 	double	w1,w2 ;
 	double	par ;		/* parralax */
 

@@ -315,7 +315,7 @@ typedef	struct {
 	  long	ra ;		/* right ascension, seconds of arc, not time */
 	  long	dec ;		/* declination, seconds of arc */
 	  int	mag ;		/* magnitude * 100 */
-	  char	type[2] ;	/* object type
+	  char	type[2] ;	/* object type */
 	  char	spec[2] ;	/* spectral type */
 	  char	cons[3] ;	/* constellation */
 	  char	*name ;		/* name, if any, or NULL */

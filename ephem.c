@@ -7,6 +7,9 @@ static	char	usage[] =
 ;
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 #include <time.h>
 #include <math.h>
 #include <sys/types.h>
@@ -21,17 +24,16 @@ static	double	jdate ;
 static	int	hourAngles = 0 ;
 static	double	aries ;		/* hour angle of aries */
 
+int
 main(argc, argv)
 	int	argc ;
 	char	**argv ;
 {
-	double	lat,lon,rad ;
+	double	rad ;
 	double	decl, RA ;
-	double	E ;
 	PlanetState p ;
 	int	y,m,d ;
 	int	hh, mm ;
-	double	ss ;
 	long	s ;
 	int	haveDay = 0 ;
 	int	local = 0 ;
@@ -187,7 +189,7 @@ showPlanet(name, state)
 {
 	int	lad,lam,las ;
 	int	lod,lom,los ;
-	int	rad, rah,ram,ras ;
+	int	rah,ram,ras ;
 	int	dd,dm,ds ;
 	double	tmp ;
 	char	sign = 'N' ;
@@ -241,7 +243,7 @@ showSat(name, decl,RA,dist)
 	char	*name ;
 	double	decl, RA, dist ;
 {
-	int	rad,rah,ram,ras ;
+	int	rah,ram,ras ;
 	int	dd,dm,ds ;
 	double	tmp ;
 	double	sha, gha ;

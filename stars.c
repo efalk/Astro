@@ -1,10 +1,12 @@
 #ifndef lint
-static	char	sccsid[] = "%Z%%M% %I% %E% SMI" ;
+static const char sccsid[] = "%Z%%M% %I% %E% SMI" ;
+static const char rcsid[] = "$Id$" ;
 #endif
 
 	/* Read the Yale & PPM star catalogs */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 #include <sys/types.h>
 
@@ -76,15 +78,11 @@ ReadPPMStars(maxmag, ra0,ra1, d0,d1, jd, filename,  rval)
 {
 	unsigned char	buf[19] ;
 	FILE	*ifile ;
-	int	type, ppm, sao, hd ;
+	int	type;
 	long	ra,dec, mag, pma, pmd ;
-	long	off ;
 	int	wrap ;
-	float	r, posn[3] ;
 	float	minmag = 100. ;
-	char	spect, class ;
 	int	count = 0 ;
-	float	lastSize = 1.0, size ;
 	int	nalloc = 256 ;
 	int	n ;
 	int	years = (float)(jd-JD2000)/365.24 ;
