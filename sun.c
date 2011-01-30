@@ -33,9 +33,7 @@
 
 
 void
-SunEcliptic(jdate, lat,lon,rad)
-	double	jdate ;
-	double	*lat, *lon, *rad ;
+SunEcliptic(double jdate, double *lat, double *lon, double *rad)
 {
 	double	T,T2,T3 ;	/* time, in centuries */
 	double	L ;		/* geometric mean longitude of Sun */
@@ -73,9 +71,7 @@ SunEcliptic(jdate, lat,lon,rad)
 
 
 void
-SunEquatorial(jdate, decl,RA,rad)
-	double	jdate ;
-	double	*decl, *RA, *rad ;
+SunEquatorial(double jdate, double *decl, double *RA, double *rad)
 {
 	double	T,T2,T3 ;	/* time, in centuries */
 	double	lat,lon ;
