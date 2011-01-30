@@ -55,8 +55,7 @@ h2hms(hours, h,m,s)
 
 
 void
-printHms(hours)
-	double	hours ;
+printHms(double hours)
 {
 	printf("%s", convertHms(hours)) ;
 }
