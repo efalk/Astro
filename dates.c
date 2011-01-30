@@ -119,8 +119,7 @@
 
 
 double
-date2julian(yy,mm,dd)
-	int	yy,mm,dd ;
+date2julian(int yy, int mm, int dd)
 {
 	int	y = yy ;
 	int	m = mm ;
@@ -145,21 +144,14 @@ date2julian(yy,mm,dd)
 
 
 double
-time2julian(yy,mm,dd, hr,mn,s)
-	int	yy,mm,dd ;
-	int	hr,mn ;
-	double	s ;
+time2julian(int yy, int mm, int dd,  int hr, int mn, double s)
 {
 	return date2julian(yy,mm,dd) + hms2h(hr,mn,s)/24. ;
 }
 
 
 void
-julian2date(jdate, yy,mm,dd)
-	double	jdate ;
-	int	*yy ;
-	int	*mm ;
-	int	*dd ;
+julian2date(double jdate, int *yy, int *mm, int *dd)
 {
 	int	z = jdate+.5 ;
 	int	a,b,c,d,e ;
@@ -182,13 +174,8 @@ julian2date(jdate, yy,mm,dd)
 
 
 void
-julian2time(jdate, yy,mm,dd, hr,mn,s)
-	double	jdate ;
-	int	*yy ;
-	int	*mm ;
-	int	*dd ;
-	int	*hr, *mn ;
-	double	*s ;
+julian2time(double jdate,
+	int *yy, int *mm, int *dd, int *hr, int *mn, double *s)
 {
 	double	j ;
 	julian2date(jdate, yy,mm,dd) ;
@@ -202,8 +189,7 @@ julian2time(jdate, yy,mm,dd, hr,mn,s)
 
 
 double
-unix2julian(t)
-	time_t	t ;
+unix2julian(time_t t)
 {
 	return JDUnix + (float)t/(24.*60.*60.) ;
 }
@@ -220,8 +206,7 @@ jnow()
 
 	/* sidereal time at midnight (far side of the Earth) */
 double
-julian2sidereal(jdate)
-	double	jdate ;
+julian2sidereal(double jdate)
 {
 	double	T = (jdate-2415020)/36525 ;
 	double	st ;
@@ -235,8 +220,7 @@ julian2sidereal(jdate)
 
 
 double
-julianTime2sidereal(jdate, time)
-	double	jdate, time ;
+julianTime2sidereal(double jdate, double time)
 {
 	/* TODO: double-check this.  Where did I get it? */
 
@@ -267,8 +251,7 @@ gmst2gast(double gmst, double JD)
 
 
 double
-time2sidereal(jdate)
-	double	jdate ;
+time2sidereal(double jdate)
 {
 	double	rval ;
 	rval = julian2sidereal(jdate) ;
@@ -278,8 +261,7 @@ time2sidereal(jdate)
 
 
 double
-siderealMean2Apparent(jdate)
-	double	jdate ;
+siderealMean2Apparent(double jdate)
 {
 	double	dpsi, deps ;
 #define	cos_eps	0.9175		/* cos(23d26'30") */
@@ -290,8 +272,7 @@ siderealMean2Apparent(jdate)
 
 
 int
-date2yday(y,m,d)
-	int	y,m,d ;
+date2yday(int y, int m, int d)
 {
 	/* if it's not a leap year */
 	if( y%4 != 0  ||  (y%100 == 0 && y%400 != 0) )
@@ -301,9 +282,7 @@ date2yday(y,m,d)
 }
 
 void
-yday2date(y,yday, m,d)
-	int	y,yday ;
-	int	*m,*d ;
+yday2date(int y, int yday, int *m, int *d)
 {
 	int	a,b,c,e ;
 
@@ -328,10 +307,7 @@ yday2date(y,yday, m,d)
 	/* compatibility routines for xephem */
 
 void
-cal_mjd(m,d,y,mjd)
-	int	m,y ;
-	double	d ;
-	double	*mjd ;
+cal_mjd(int m, double d, int y, double *mjd)
 {
 	int	di ;
 	double	df ;
@@ -344,12 +320,12 @@ cal_mjd(m,d,y,mjd)
 
 #ifdef	STANDALONE
 
-static
-test2(jdate)
-	double	jdate ;
+#include <stdio.h>
+#include <stdlib.h>
+
+static void
+test2(double jdate)
 {
-	int	yday ;
-	int	y2,m2,d2 ;
 	int	y3,m3,d3 ;
 	int	h,m ;
 	double	s ;
@@ -359,9 +335,8 @@ test2(jdate)
 	  jdate, y3,m3,d3, h,m,s) ;
 }
 
-static
-test(y,m,d)
-	int	y,m,d ;
+static void
+test(int y, int m, int d)
 {
 	double	rval ;
 	int	yday ;
@@ -380,9 +355,8 @@ test(y,m,d)
 }
 
 
-static
-testSt(y,m,d)
-	int	y,m,d ;
+static void
+testSt(int y, int m, int d)
 {
 	double	jd,T, st ;
 
@@ -395,11 +369,10 @@ testSt(y,m,d)
 }
 
 
+int
 main()
 {
 	double	jd,t,st ;
-	int	yy,mm,dd, h,m ;
-	double	s ;
 
 	test2(jnow()) ;
 	test(1900,1,1) ;
