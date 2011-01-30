@@ -359,6 +359,7 @@ extern	void	yday2date(int y, int yday,  int *m, int *d) ;
 extern	double	julian2sidereal(double jdate) ;
 extern	double	julianTime2sidereal(double jdate, double time) ;
 extern	double	time2sidereal(double jdate) ;
+extern	double	gmst2gast(double gmst, double JD);
 extern	double	siderealMean2Apparent(double jdate) ;
 extern	double	unix2julian(time_t) ;
 extern	double	jnow() ;

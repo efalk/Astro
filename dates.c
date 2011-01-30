@@ -45,6 +45,10 @@
  *	TODO: double-check this.  Where did I get it?
  *
  * double
+ * gmst2gast(double gmst, double JD)
+ *	Convert mean sidereal time to apparent sidereal time
+ *
+ * double
  * julianTime2sidereal(double jdate, double time)
  *	Return sidereal time in hours for a specific julian date
  *	and time other than 0h.  Time is specified in hours since midnight
@@ -237,6 +241,28 @@ julianTime2sidereal(jdate, time)
 	/* TODO: double-check this.  Where did I get it? */
 
 	return julian2sidereal(jdate) + time*1.002737908 ;
+}
+
+/**
+ * @brief convert Greenwich Mean Sidereal Time to Greenwich Apparent
+ * Sidereal Time.
+ */
+double
+gmst2gast(double gmst, double JD)
+{
+	double omega;	/* ascending node of Moon */
+	double L;	/* mean longitude of Sun */
+	double psi;	/* nutation in longitude */
+	double epsilon;	/* obliquity */
+	double eqeq;	/* equation of equinoxes */
+	double D = JD - 2451545.0;
+
+	omega = 125.04 - 0.052954 * D;
+	L = 280.47 + 0.98565 * D;
+	epsilon = 23.4393 - 0.0000004 * D;
+	psi = -0.000319 * sin(omega*RAD) - 0.000024 * sin(2*L*RAD);
+	eqeq = psi * cos(epsilon*RAD);
+	return gmst + eqeq;
 }
 
 
