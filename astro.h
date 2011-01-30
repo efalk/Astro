@@ -423,6 +423,7 @@ extern	void	deltaPolar(double lat1, double lon1, double r1,
 extern	double	keplerE(double M, double e) ;
 extern	double	limitAngle(double angle) ;
 extern	double	limitHour(double angle) ;
+extern	void	printHms(double hours);
 
 	/* I/O */
 
