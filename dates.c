@@ -204,11 +204,14 @@ jnow()
 }
 
 
-	/* sidereal time at midnight (far side of the Earth) */
+/**
+ * Given a Julian date (not including time),
+ * compute the Sidereal time at midnight.
+ */
 double
 julian2sidereal(double jdate)
 {
-	double	T = (jdate-2415020)/36525 ;
+	double	T = (jdate-JD1900)/36525 ;
 	double	st ;
 	int	i ;
 
@@ -219,12 +222,36 @@ julian2sidereal(double jdate)
 }
 
 
+/**
+ * Given a Julian date (not including time), and GMT in float hours,
+ * compute the Sidereal time.
+ */
 double
 julianTime2sidereal(double jdate, double time)
 {
-	/* TODO: double-check this.  Where did I get it? */
+	return julian2sidereal(jdate) + time*(366.2422/365.2422);
+}
 
-	return julian2sidereal(jdate) + time*1.002737908 ;
+/**
+ * @brief convert Greenwich Mean Sidereal Time to Greenwich Apparent
+ * Sidereal Time.
+ */
+double
+gmst2gast(double gmst, double JD)
+{
+	double omega;	/* ascending node of Moon */
+	double L;	/* mean longitude of Sun */
+	double psi;	/* nutation in longitude */
+	double epsilon;	/* obliquity */
+	double eqeq;	/* equation of equinoxes */
+	double D = JD - 2451545.0;
+
+	omega = 125.04 - 0.052954 * D;
+	L = 280.47 + 0.98565 * D;
+	epsilon = 23.4393 - 0.0000004 * D;
+	psi = -0.000319 * sin(omega*RAD) - 0.000024 * sin(2*L*RAD);
+	eqeq = psi * cos(epsilon*RAD);
+	return gmst + eqeq;
 }
 
 /**
@@ -361,7 +388,7 @@ testSt(int y, int m, int d)
 	double	jd,T, st ;
 
 	jd = date2julian(y,m,d) ;
-	T = (jd-2415020)/36525 ;
+	T = (jd-JD1900)/36525 ;
 	st = julian2sidereal(jd) ;
 	printf("jd = %f, T=%f, st=", jd, T) ;
 	printHms(st) ;
