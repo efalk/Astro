@@ -1,14 +1,16 @@
 
+#include <stdio.h>
 #include <sys/types.h>
 #include <time.h>
 #include <math.h>
 
 #include "astro.h"
 
-/* date conversion routines, from Astronomical Formulae for Calculators,
- * by Jean Meeus, 4th edition.
+/* Date conversion routines, from Astronomical Formulae for Calculators,
+ * by Jean Meeus, 4th edition [1] and Astronimical Algorithms by Jean Meeus,
+ * 2nd edition [2].
  *
- *
+ * See below for more detailed explanations.
  *
  * double
  * date2julian(int y, int m, int d)
@@ -24,7 +26,7 @@
  *
  * void
  * julian2time(double jdate, int *y, int *m, int *d, int *h, int *m, double *s)
- *	Convert a julian date to y/m/d h:m:s
+ *	Convert a julian date to y/m/d h:m:s GMT
  *
  * double
  * unix2julian(time_t)
@@ -37,16 +39,12 @@
  * double
  * julian2sidereal(double jdate)
  *	Return sidereal time in hours for a specific julian date
- *	(Note: this is the sidereal time of midnight.  I.e. draw a
+ *	(Note: this is the sidereal time of midnight GMT.  I.e. draw a
  *	line from the Sun through the center of the Earth and out
  *	to the stars.  Wherever the line passes through the far side of
  *	the Earth, that's where it's midnight.  Finding the sidereal
  *	time at other longitudes will require further conversion.)
  *	TODO: double-check this.  Where did I get it?
- *
- * double
- * gmst2gast(double gmst, double JD)
- *	Convert mean sidereal time to apparent sidereal time
  *
  * double
  * julianTime2sidereal(double jdate, double time)
@@ -57,6 +55,10 @@
  * double
  * time2sidereal(double jdate)
  *	Return sidereal time at Grenwich
+ *
+ * double
+ * gmst2gast(double gmst, double JD)
+ *	Convert mean sidereal time to apparent sidereal time
  *
  * double
  * siderealMean2Apparent(double jdate)
@@ -73,6 +75,30 @@
  *	Obtain month and day from year and year of the day
  *
  *
+ *
+ * A few notes:
+ *  GMT is Greenwich Mean Time.
+ *  UT is Universal Time.
+ *   GMT and UT are both based on the rotation of the Earth, which is not
+ *   constant.  These are not uniform times.
+ *
+ *  Ephemeris time is based on the motion of the planets instead of the
+ *   rotation of the Earth.  It has been replaced by Dynamical Time.
+ *
+ *  Dynamical Time (TD) is based on atomic clocks.  There are actually
+ *   two Dynamical Times: Barycentric Dynamical Time, (TDB) based
+ *   on the center of mass of the solar system, and Terrestrial
+ *   Dynamical Time (TDT).  The difference is caused by relativistic effects
+ *   of the Earth's orbit.  Most of the time, you can ignore the difference.
+ *   The difference between TD and UT is determined by astronomical
+ *   observation.  As of 2004, TD - UT = 64.6 seconds.
+ *
+ *  Julian Days (JD) are days since the start of the year -4712.
+ *
+ *  Sidereal time (ST) measures the rotation of the Earth relative to
+ *   the vernal equinox rather than the Sun.  One sidereal day is 23 hours,
+ *   56 minutes, 4.091 seconds.  This is about .008 seconds shorter than
+ *   a day relative to the stars, due to the precession of the equinoxes.
  *
  *
  * Overview:
@@ -118,12 +144,14 @@
  */
 
 
+/**
+ * Return Julian day for given date.  Algorithm from [2], ch 7
+ */
 double
-date2julian(int yy, int mm, int dd)
+date2julian(int yy, int mm, double d)
 {
 	int	y = yy ;
 	int	m = mm ;
-	int	d = dd ;
 	int	a,b ;
 
 	if( m <= 2 ) {
@@ -132,14 +160,14 @@ date2julian(int yy, int mm, int dd)
 	}
 
 	/* Gregorian calendar started 15 Oct 1582 */
-	if( yy*10000 + mm*100 + dd > 15821015 ) {
+	if( yy*10000 + mm*100 + d > 15821015 ) {
 	  a = y/100 ;
-	  b = a - a/4 - 2 ;
+	  b = 2 - a + a/4;
 	}
 	else
 	  b = 0 ;
 
-	return floor(365.25*y) + floor(30.6001*(m+1)) + d + 1720994.5 - b ;
+	return (int)(365.25*(y+4716)) + (int)(30.6001*(m+1)) + d + b - 1524.5;
 }
 
 
@@ -186,6 +214,31 @@ julian2time(double jdate,
 	*s = j ;
 }
 
+/**
+ * Return the GMT hour for this jdate.
+ */
+double
+julian2hour(double jdate)
+{
+	int yy, mm, dd;
+	julian2date(jdate, &yy,&mm,&dd);
+	return (jdate - date2julian(yy,mm,dd)) * 24;
+}
+
+/**
+ * Print a julian date as yyy-mm-dd hh:mm:ss
+ */
+void
+printDate(double jdate)
+{
+	int	y3,m3,d3 ;
+	int	h,m ;
+	double	s ;
+
+	julian2time(jdate, &y3,&m3,&d3, &h,&m,&s) ;
+	printf("%4d-%2.2d-%2.2d %d:%2.2d:%.1f\n", y3,m3,d3, h,m,s);
+}
+
 
 
 double
@@ -206,19 +259,21 @@ jnow()
 
 /**
  * Given a Julian date (not including time),
- * compute the Sidereal time at midnight.
+ * compute the Sidereal time at midnight UT.  Jdate should end in .5.
+ * Based on [2], ch. 12
+ * @return  Sidereal time in hours
  */
 double
 julian2sidereal(double jdate)
 {
-	double	T = (jdate-JD1900)/36525 ;
+	double	T = (jdate-JD2000)/36525 ;
 	double	st ;
-	int	i ;
 
-	st = 6.6460656 + 2400.051262*T + .00002581*T*T ;
-	i = st/24 ;
-	st -= i*24 ;
-	return st ;
+	/* Degrees */
+	st = 100.46061837 + 36000.770053608 * T +
+		0.000387993 * T*T + T*T*T / 38710000;
+	st = limitAngle(st);
+	return st*24/360;
 }
 
 
@@ -229,51 +284,7 @@ julian2sidereal(double jdate)
 double
 julianTime2sidereal(double jdate, double time)
 {
-	return julian2sidereal(jdate) + time*(366.2422/365.2422);
-}
-
-/**
- * @brief convert Greenwich Mean Sidereal Time to Greenwich Apparent
- * Sidereal Time.
- */
-double
-gmst2gast(double gmst, double JD)
-{
-	double omega;	/* ascending node of Moon */
-	double L;	/* mean longitude of Sun */
-	double psi;	/* nutation in longitude */
-	double epsilon;	/* obliquity */
-	double eqeq;	/* equation of equinoxes */
-	double D = JD - 2451545.0;
-
-	omega = 125.04 - 0.052954 * D;
-	L = 280.47 + 0.98565 * D;
-	epsilon = 23.4393 - 0.0000004 * D;
-	psi = -0.000319 * sin(omega*RAD) - 0.000024 * sin(2*L*RAD);
-	eqeq = psi * cos(epsilon*RAD);
-	return gmst + eqeq;
-}
-
-/**
- * @brief convert Greenwich Mean Sidereal Time to Greenwich Apparent
- * Sidereal Time.
- */
-double
-gmst2gast(double gmst, double JD)
-{
-	double omega;	/* ascending node of Moon */
-	double L;	/* mean longitude of Sun */
-	double psi;	/* nutation in longitude */
-	double epsilon;	/* obliquity */
-	double eqeq;	/* equation of equinoxes */
-	double D = JD - 2451545.0;
-
-	omega = 125.04 - 0.052954 * D;
-	L = 280.47 + 0.98565 * D;
-	epsilon = 23.4393 - 0.0000004 * D;
-	psi = -0.000319 * sin(omega*RAD) - 0.000024 * sin(2*L*RAD);
-	eqeq = psi * cos(epsilon*RAD);
-	return gmst + eqeq;
+	return limitHour(julian2sidereal(jdate) + time*(366.2422/365.2422));
 }
 
 
@@ -295,6 +306,28 @@ siderealMean2Apparent(double jdate)
 
 	nutation(&dpsi, &deps, jdate) ;
 	return dpsi*cos_eps/15./3600. ;
+}
+
+/**
+ * @brief convert Greenwich Mean Sidereal Time to Greenwich Apparent
+ * Sidereal Time.
+ */
+double
+gmst2gast(double gmst, double JD)
+{
+	double omega;	/* ascending node of Moon */
+	double L;	/* mean longitude of Sun */
+	double psi;	/* nutation in longitude */
+	double epsilon;	/* obliquity */
+	double eqeq;	/* equation of equinoxes */
+	double D = JD - 2451545.0;
+
+	omega = 125.04 - 0.052954 * D;
+	L = 280.47 + 0.98565 * D;
+	epsilon = 23.4393 - 0.0000004 * D;
+	psi = -0.000319 * sin(omega*RAD) - 0.000024 * sin(2*L*RAD);
+	eqeq = psi * cos(epsilon*RAD);
+	return gmst + eqeq;
 }
 
 
