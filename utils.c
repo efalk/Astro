@@ -9,10 +9,10 @@
 /* conversion and print utilities */
 
 
-	/* convert hours to hh:mm:ss.ssss */
-	/* works for degrees too */
-
-char	*
+/**
+ * convert hours to "hh:mm:ss.ssss"
+ */
+const char *
 convertHms(double hours)
 {
 static	char	obuf[80] ;
@@ -25,19 +25,6 @@ static	char	obuf[80] ;
 	return obuf ;
 }
 
-
-
-	/* convert hours:minutes:seconds (or dms) to hours (or degrees) */
-double
-hms2h(h,m,s)
-	int	h,m ;
-	double	s ;
-{
-	double	rval = h ;
-	rval += (1./60.)*m ;
-	rval += (1./3600.)*s ;
-	return rval ;
-}
 
 	/* convert hours (or degrees) to hours:minutes:seconds */
 
@@ -57,7 +44,7 @@ h2hms(hours, h,m,s)
 void
 printHms(double hours)
 {
-	printf("%s", convertHms(hours)) ;
+	printf("%s\n", convertHms(hours)) ;
 }
 
 
@@ -112,21 +99,35 @@ deltaPolar(lat1,lon1,r1, lat2,lon2,r2, lat3,lon3,r3)
 }
 
 
+/**
+ * Return a % 360
+ */
 double
-limitAngle(a)
-  double a ;
+limitAngle(double a)
 {
-  while( a < 0. ) a += 360. ;
-  if( a >= 360. ) a -= (int)a/360*360 ;
-  return a ;
+  if( a >= 360 ) {
+    int ia = a;
+    a -= ia;
+    return ia % 360 + a;
+  } else if( a < 0 ) {
+    return 360 - limitAngle(-a);
+  }
+  return a;
 }
 
 
+/**
+ * Return h % 24
+ */
 double
-limitHour(a)
-  double a ;
+limitHour(double h)
 {
-  while( a < 0. ) a += 24. ;
-  if( a >= 24. ) a -= (int)a/24*24 ;
-  return a ;
+  if( h >= 24 ) {
+    int ih = h;
+    h -= ih;
+    return ih % 24 + h;
+  } else if( h < 0 ) {
+    return 24 - limitHour(-h);
+  }
+  return h;
 }

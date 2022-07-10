@@ -239,14 +239,11 @@ printDate(double jdate)
 	printf("%4d-%2.2d-%2.2d %d:%2.2d:%.1f\n", y3,m3,d3, h,m,s);
 }
 
-
-
 double
 unix2julian(time_t t)
 {
 	return JDUnix + (float)t/(24.*60.*60.) ;
 }
-
 
 
 double

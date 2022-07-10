@@ -72,7 +72,7 @@ main(argc, argv)
 	    }
 	  }
 	  else {
-	    fprintf(stderr, usage) ;
+	    fputs(usage, stderr);
 	    exit(2) ;
 	  }
 	}
@@ -230,8 +230,8 @@ showPlanet(name, state)
 	if( hourAngles ) {
 	  sha = ra2sha(RA) ;
 	  gha = sha2gha(sha, jdate) ;
-	  printf("	%s", deg2dmStr(sha) ) ;
-	  printf(" %s", deg2dmStr(gha) ) ;
+	  printf("	%10s", deg2dmStr(sha) ) ;
+	  printf(" %10s", deg2dmStr(gha) ) ;
 	}
 
 	printf("\n") ;

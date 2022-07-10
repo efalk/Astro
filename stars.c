@@ -1,6 +1,6 @@
 #ifndef lint
 static const char sccsid[] = "%Z%%M% %I% %E% SMI" ;
-static const char rcsid[] = "$Id$" ;
+static const char rcsid[] = "$Id: stars.c,v 1.2 2009-08-12 15:37:26 falk Exp $" ;
 #endif
 
 	/* Read the Yale & PPM star catalogs */
