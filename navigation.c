@@ -127,7 +127,7 @@ sext2obs(Hs, ie, h, T, P, HP)
   double Hs ;	/* raw sextant reading */
   double ie ;	/* index error */
   double h ;	/* height above sea level, meters */
-  double T ;	/* temperature, °C, if known, else 0. */
+  double T ;	/* temperature, Â°C, if known, else 0. */
   double P ;	/* pressure, mb, if known, else 0. */
   double HP ;	/* horizontal parallax; see almanac.  0 for stars. */
 {
@@ -163,12 +163,12 @@ sext2obs(Hs, ie, h, T, P, HP)
  * cos(A) = tan(b) * cot(c) = cos(a) * sin(B)
  * cos(B) = tan(a) * cot(c) = cos(b) * sin(A)
  *
- * A quadrantal spherical triangle has one 90° side
+ * A quadrantal spherical triangle has one 90Â° side
  *
- * A biquadrantal spherical triangle has two 90° sides, is
- * isosceles and has two right angles opposite the 90° sides.
+ * A biquadrantal spherical triangle has two 90Â° sides, is
+ * isosceles and has two right angles opposite the 90Â° sides.
  *
- * A triquadrantal spherical triangle has three 90° sides,
+ * A triquadrantal spherical triangle has three 90Â° sides,
  * is equilateral, has three right angles, and bounds
  * 1/8 of the sphere.
  */

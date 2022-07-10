@@ -206,7 +206,7 @@ showPlanet(name, state)
 	h2hms(lat, &lad, &lam, &tmp) ; las = tmp ;
 	h2hms(state->lon, &lod, &lom, &tmp) ; los = tmp ;
 
-	printf("%s	%2d°%2.2d'%2.2d%c   %3d°%2.2d'%2.2d   %8.4f",
+	printf("%s	%2dÂ°%2.2d'%2.2d%c   %3dÂ°%2.2d'%2.2d   %8.4f",
 		name, lad,lam,las,sign, lod,lom,los, state->R) ;
 
 	deltaPolar(earthState.lat, earthState.lon, earthState.R,
@@ -224,7 +224,7 @@ showPlanet(name, state)
 	h2hms(decl, &dd, &dm, &tmp) ; ds = tmp ;
 	h2hms(RA, &rah, &ram, &tmp) ; ras = tmp ;
 
-	printf("   %2d°%2.2d'%2.2d%c   %3d:%2.2d:%2.2d  %8.4f",
+	printf("   %2dÂ°%2.2d'%2.2d%c   %3d:%2.2d:%2.2d  %8.4f",
 		dd,dm,ds,sign, rah,ram,ras, dist) ;
 
 	if( hourAngles ) {
@@ -260,7 +260,7 @@ showSat(name, decl,RA,dist)
 	h2hms(decl, &dd, &dm, &tmp) ; ds = tmp ;
 	h2hms(RA, &rah, &ram, &tmp) ; ras = tmp ;
 
-	printf("   %2d°%2.2d'%2.2d%c   %3d:%2.2d:%2.2d  %8.4f",
+	printf("   %2dÂ°%2.2d'%2.2d%c   %3d:%2.2d:%2.2d  %8.4f",
 		dd,dm,ds,sign, rah,ram,ras, dist) ;
 
 	if( hourAngles ) {
@@ -293,7 +293,7 @@ showEarth(name, state)
 	h2hms(lat, &lad, &lam, &tmp) ; las = tmp ;
 	h2hms(state->lon, &lod, &lom, &tmp) ; los = tmp ;
 
-	printf("%s	%2d°%2.2d'%2.2d%c   %3d°%2.2d'%2.2d   %8.4f",
+	printf("%s	%2dÂ°%2.2d'%2.2d%c   %3dÂ°%2.2d'%2.2d   %8.4f",
 		name, lad,lam,las,sign, lod,lom,los, state->R) ;
 
 	printf("\n") ;

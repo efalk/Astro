@@ -20,11 +20,11 @@
  *
  * char *
  * deg2dmsStr(double degrees)
- *	Convert degrees to dd컈m'ss.s
+ *	Convert degrees to dd째mm'ss.s
  *
  * char *
  * deg2dmStr(double degrees)
- *	Convert degrees to dd컈m.mm
+ *	Convert degrees to dd째mm.mm
  *
  * char *
  * hours2hmsStr(double hours)
@@ -112,7 +112,7 @@ deg2dmsStr(degrees)
 	m = (int)(degrees * 60) % 60 ;
 	s = (int)(degrees * 3600) % 60 ;
 	ss = (int)(degrees * 36000 + .5) % 10 ;
-	snprintf(rval, sizeof(rval), "%3.3d�%2.2d'%2.2d.%1.1d", d,m,s,ss) ;
+	snprintf(rval, sizeof(rval), "%3.3d째%2.2d'%2.2d.%1.1d", d,m,s,ss) ;
 	return rval ;
 }
 
@@ -132,7 +132,7 @@ deg2dmStr(degrees)
 	d = degrees ;
 	m = (int)(degrees * 60) % 60 ;
 	mm = (int)(degrees * 6000 + .5) % 100 ;
-	snprintf(rval, sizeof(rval), "%s%d�%2.2d.%2.2d", sign?"-":"", d,m,mm) ;
+	snprintf(rval, sizeof(rval), "%s%d째%2.2d.%2.2d", sign?"-":"", d,m,mm) ;
 	return rval ;
 }
 
