@@ -1,3 +1,5 @@
+#ifndef	ASTRO_H
+#define	ASTRO_H
 /*
  *
  *General astronomical functions, from Astronomical Formulae for Calculators,
@@ -262,12 +264,16 @@
 
 #include <math.h>
 
+#ifndef	HIGH_PRECISION
+#define	HIGH_PRECISION	1
+#endif
+
 #define	JD1900	2415020.0
 #define	JD1950	2433282.423		/* standard equinox of 1950 */
 #define	JD2000	2451545.0		/* Jan 0.5, 2000 */
 #define	JDUnix	2440587.5		/* Unix epoch: Jan 0.0 1970 */
 
-#define	EarthTilt	23.4392911	/* degrees, epoch JD2000 */
+#define	EarthTilt	23.439291111	/* degrees, epoch JD2000 */
 
 #define	RAD	(M_PI/180.)
 #define	DEG	(180./M_PI)
@@ -346,14 +352,15 @@ typedef	struct {
 
 
 
-#ifdef	__STDC__
 
 	/* time conversions */
-extern	double	date2julian(int y, int m, int d) ;
+extern	double	date2julian(int y, int m, double d);
 extern	double	time2julian(int y, int m, int d, int hr, int mn, double s) ;
 extern	void	julian2date(double jdate, int *y, int *m, int *d) ;
 extern	void	julian2time(double jdate, int *y, int *m, int *d,
 			int *hr, int *mn, double *s) ;
+extern	double	julian2hour(double jdate);
+extern	void	printDate(double jdate);
 extern	int	date2yday(int y, int m, int d) ;
 extern	void	yday2date(int y, int yday,  int *m, int *d) ;
 extern	double	julian2sidereal(double jdate) ;
@@ -384,6 +391,12 @@ extern	void	nutation(double *psi, double *eps, double jdate) ;
 	/* Coordinates of the Sun */
 extern	void	SunEcliptic(double jdate, double *lat,double *lon,double *rad);
 extern	void	SunEquatorial(double jd, double *decl,double *RA,double *rad);
+extern	double	SunNoon(double jdate, double lat, double lon);
+extern	double	SunSet(double jdate, double lat, double lon);
+extern	double	SunGHA(double jd);
+extern	void	SunPosition(double jdate, double lat, double lon,
+			double *pel, double *paz);
+extern	double	SunAltitude(double jd, double lat, double lon);
 
 	/* Coordinates of the Planets (relative to the Sun) */
 extern	void	Mercury(double date, PlanetState *p) ;
@@ -411,7 +424,12 @@ extern	double	gha2lha(double SHA, double jdate) ;
 
 
 	/* utilities */
-extern	double	hms2h(int h, int m, double s) ;
+
+/**
+ * convert hours:minutes:seconds (or dms) to hours (or degrees)
+ */
+#define hms2h(h,m,s)	(h + (1./60.)*m + (1./3600.)*s)
+#define	hm2h(h,m)	(h + (1./60.)*m)
 extern	void	h2hms(double hh, int *h, int *m, double *s) ;
 extern	void	polar2rect(double lat,double lon,double R,
 			double *X, double *Y, double *Z) ;
@@ -423,6 +441,8 @@ extern	void	deltaPolar(double lat1, double lon1, double r1,
 extern	double	keplerE(double M, double e) ;
 extern	double	limitAngle(double angle) ;
 extern	double	limitHour(double angle) ;
+extern	const char *convertHms(double hours);
+extern	const char *convertDms(double hours);
 extern	void	printHms(double hours);
 
 	/* I/O */
@@ -435,42 +455,11 @@ extern	char	*deg2dmStr(double jdate) ;
 extern	char	*hours2hmsStr(double jdate) ;
 extern	char	*hours2hmStr(double jdate) ;
 
-#else
-extern	double	date2julian() ;
-extern	double	time2julian() ;
-extern	void	julian2date() ;
-extern	void	julian2time() ;
-extern	int	date2yday() ;
-extern	void	yday2date() ;
-extern	double	julian2sidereal() ;
-extern	double	julianTime2sidereal() ;
-extern	double	siderealMean2Apparent() ;
-extern	double	unix2julian() ;
-extern	double	jnow() ;
-extern	void	equat2ecliptic() ;
-extern	void	ecliptic2equat() ;
-extern	void	equat2bearings() ;
-extern	void	precessionRate() ;
-extern	void	precession() ;
-extern	void	nutation() ;
-extern	void	SunEcliptic() ;
-extern	void	SunEquatorial() ;
-extern	double	hms2h() ;
-extern	void	h2hms() ;
-extern	void	polar2rect() ;
-extern	void	rect2polar() ;
-extern	void	deltaPolar() ;
-extern	double	keplerE() ;
-extern	void	Mercury() ;
-extern	void	Venus() ;
-extern	void	Earth() ;
-extern	void	Mars() ;
-extern	void	Jupiter() ;
-extern	void	Saturn() ;
-extern	void	Uranus() ;
-extern	void	Neptune() ;
-extern	void	Pluto() ;
-extern	void	MoonPrecise() ;
-extern	void	Moon() ;
-extern	int	ReadPPMStars() ;
-#endif
+
+static inline double sind(double a) { return sin(a*RAD); }
+static inline double cosd(double a) { return cos(a*RAD); }
+static inline double asind(double x) { return asin(x) * DEG; }
+static inline double acosd(double x) { return acos(x) * DEG; }
+static inline double atan2d(double y, double x) { return atan2(y,x) * DEG; }
+
+#endif	/* ASTRO_H */
