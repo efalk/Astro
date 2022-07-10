@@ -25,12 +25,6 @@
  *
  */
 
-static inline double sind(double a) { return sin(a*RAD); }
-static inline double cosd(double a) { return cos(a*RAD); }
-static inline double asind(double x) { return asin(x) * DEG; }
-static inline double acosd(double x) { return acos(x) * DEG; }
-static inline double atan2d(double y, double x) { return atan2(y,x) * DEG; }
-
 
 /**
  * Return lat,lon,radius from the date.  lat,lon are in degrees,
@@ -86,7 +80,7 @@ SunEcliptic(double jdate, double *lat, double *lon, double *rad)
 void
 SunEquatorial(double jdate, double *decl, double *RA, double *rad)
 {
-	double	T,T2,T3 ;	/* time, in centuries, squared, cubed */
+	double	T,T2;		/* time, in centuries, squared, cubed */
 	double L0, M;		/* Mean longitude, Mean anomoly */
 	double e;		/* Eccentricity */
 	double C;		/* Equation of Center */
@@ -94,7 +88,7 @@ SunEquatorial(double jdate, double *decl, double *RA, double *rad)
 	double obl;		/* Obliqiuty of the ecliptic, see [2] 22.2 */
 	double psi, eps;
 
-	T = (jdate-JD2000)/36525 ; T2 = T*T ; T3 = T*T*T ;
+	T = (jdate-JD2000)/36525; T2 = T*T;
 	L0 = limitAngle(280.46646 + 36000.76983 * T + 0.0003032 * T2);
 	M = limitAngle(357.52911 + 35999.05029 * T - 0.0001537 * T2);
 	e = 0.016708634 - 0.000042037 * T - 0.0000001267 * T2;
@@ -104,10 +98,84 @@ SunEquatorial(double jdate, double *decl, double *RA, double *rad)
 	lon = L0 + C;
 	v = M + C;
 	*rad = 1.000001018 * (1 - e*e) / (1 + e * cosd(v));
-	obl = 23.439291111 - (46.8150/3600) * T - (.00059/3600) * T2 + 
-		(.001813/3600) * T3;
+	obl = obliquity(jdate);
 	nutation(&psi, &eps, jdate);	/* TODO: eps is not right */
 	obl += eps/3600;
 	*RA = limitAngle(atan2d(cosd(obl)*sind(lon), cosd(lon))) * (24./360.);
 	*decl = asind(sind(obl) * sind(lon));
+}
+
+/**
+ * Return bearing to the Sun for an observer at given location and specific
+ * time.
+ */
+void
+SunPosition(double jdate, double lat, double lon, double *az, double *elev)
+{
+	double decl, RA, rad;
+	SunEquatorial(jdate, &decl, &RA, &rad);
+	equat2bearings(decl, RA, lat, lon, az, elev, jdate, julian2hour(jdate));
+}
+
+/**
+ * Return the julian cycle since Jan 1, 2000
+ * @param jdate  Julian date
+ * @param lon    Observer's longitude, degrees W
+ */
+static inline double
+jcycle(double jdate, double lon)
+{
+	jdate = jdate - JD2000 - 0.0009 - lon/360.;
+	return round(jdate);
+}
+
+/**
+ * Return the Julian date for local noon at the observer's location.
+ */
+double
+SunNoon(double jdate, double lat, double lon)
+{
+	return JD2000 + 0.0009 + lon/360. + jcycle(jdate, lon);
+}
+
+/**
+ * Return the Julian date for sunset at the observer's location.
+ * Note that sunset is the time of setting of the upper limb of the
+ * Sun, corrected for atmospheric refraction.  Time is approximate
+ * because refraction is only an estimate.  In practice, this should
+ * be within 20 seconds.
+ */
+double
+SunSet(double jdate, double lat, double lon)
+{
+	double n = jcycle(jdate, lon);
+	double noon = SunNoon(jdate, lat, lon);
+	double M = limitAngle(357.5291 + 0.98560028 * (noon - JD2000));
+	double C = 1.9148 * sind(M) + 0.0200 * sind(2*M) + 0.0003 * sind(3*M);
+	double lambda = limitAngle(M + 102.9372 + C + 180);
+#if 0
+	double jtransit = noon + (0.0053 * sind(M)) - (0.0069 * sind(2*lambda));
+#endif
+	double decl = asind(sind(lambda) * sind(23.45));
+	double w0 = acosd((sind(-0.83) - sind(lat) * sind(decl)) /
+			(cosd(lat) * cosd(decl)));
+	double jset = JD2000 + 0.0009 + ((w0+lon)/360 + n + 0.0053*sind(M))
+		+ 0.0069 * sind(2*lambda);
+	return jset;
+}
+
+/**
+ * Return the Sun's Grenwich Hour Angle from Julian date.
+ *
+ * @param    jdate  Julian date
+ * @returns  GHA, degrees west of Grenwich
+ */
+double
+SunGHA(double jdate)
+{
+	double gha = (jdate - JD2000 - .0009) * 360;
+	int igha = gha;
+	gha -= igha;
+	igha %= 360;
+	return igha + gha;
 }
