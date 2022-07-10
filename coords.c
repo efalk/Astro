@@ -29,24 +29,31 @@
  * TODO: rise/set times from chapter 8.
  */
 
+/**
+ * Find obliquity of eccliptic for a specified date.  Accurate to within
+ * 1" for +/- 2000 years.  See Meeus, ch. 22 for a more accurate formula
+ * if you need it.  Does not account for nutation.
+ *
+ * @param jdate  Julian day
+ * @return  Obliquity, degrees
+ */
 double
-obliquity(jdate)
-	double	jdate ;
+obliquity(double jdate)
 {
-	double	T = (jdate - 2415020.0) / 36525., T2 = T*T, T3 = T2*T ;
+	double T, T2, T3;
 
-	/* Meeus, formula 18.4 */
+	/* Meeus, formula 22.2 */
 
-	return 23.452294 - 0.0130125*T
-			 - 0.00000164*T2
-			 + 0.000000503*T3 ;
+	T = (jdate-JD2000)/36525 ; T2 = T*T ; T3 = T*T*T ;
+	return EarthTilt - (46.8150/3600) * T - (.00059/3600) * T2 + 
+		(.001813/3600) * T3;
 }
 
+/**
+ * convert equatorial coordinates to ecliptic coordinates.
+ */
 void
-equat2ecliptic(decl,RA, lat,lon, jdate)
-	double	decl, RA ;
-	double	*lat, *lon ;
-	double	jdate ;
+equat2ecliptic(double decl, double RA, double *lat, double *lon, double jdate)
 {
 	double	e ;	/* obliquity of ecliptic */
 	double	la, lo ;
@@ -71,12 +78,11 @@ equat2ecliptic(decl,RA, lat,lon, jdate)
 }
 
 
-
+/**
+ * Convert ecliptic coordinates to equatorial
+ */
 void
-ecliptic2equat(lat,lon, decl,RA, jdate)
-	double	lat, lon ;
-	double	*decl, *RA ;
-	double	jdate ;
+ecliptic2equat(double lat, double lon, double *decl, double *RA, double jdate)
 {
 	double	e ;	/* obliquity of ecliptic */
 	double	d,r ;
@@ -117,14 +123,17 @@ ecliptic2equat(lat,lon, decl,RA, jdate)
 	*RA = r ;
 }
 
-
+/**
+ * Convert equatorial coordinates to observer's local horizontal coords
+ * @param decl, RA  object's equatorial coords
+ * @param lat, lon  observer's lat,lon
+ * @param A, H      return: observer's bearings to object, azimuth, elevation
+ * @param jdate
+ * @param time      time, in hours GMT
+ */
 void
-equat2bearings(decl,RA, lat,lon, A,H, jdate, time)
-	double	decl, RA ;	/* object's equatorial coords */
-	double	lat, lon ;	/* observer's lat,lon */
-	double	*A, *H ;	/* observer's bearings to object */
-	double	jdate ;
-	double	time ;		/* time, in hours GMT */
+equat2bearings(double decl, double RA, double lat, double lon,
+	double *A, double *H, double jdate, double time)
 {
 	double	a, h ;
 	double	ha ;		/* hour angle */
