@@ -11,6 +11,8 @@ OBJS = $(SRCS:.c=.o)
 
 HDRS = astro.h
 
+PROGS = ephem dates test navigation
+
 lib:	libastro.a
 
 libastro.a:	$(OBJS)
@@ -31,3 +33,10 @@ navigation:	navigation.c libastro.a
 
 tags: $(SRCS) $(HDRS)
 	ctags $(SRCS) $(HDRS)
+
+clean:
+	rm -f *.o
+
+spotless: clean
+	rm -f *.a ${PROGS} tags
+	rm -rf *.dSYM
