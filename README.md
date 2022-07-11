@@ -196,44 +196,44 @@ Assorted functions useful in celestial navigation
 
 ## double ra2sha(double ra)
 convert Right Ascension (hours) to Sidereal Hour Angle (degrees)
- 
+
 ## double sha2gha(double sha, double jdate)
 convert Sidereal Hour Angle to Grenwich Hour Angle
- 
+
 ## double gha2lha(double sha, double longitude)
 convert Grenwich Hour Angle to Local Hour Angle
- 
+
 ## double interpolate(double a, double b, double hours)
 interpolate between a,b based on the fraction part of hours
- 
-## altaz(double lha, double decl, double lat, double *alt, double *az)
+
+## altaz(double lha, double decl, double lat, double \*alt, double \*az)
 Compute altitude (Hc) and Azimuth (Z) from lha, declination, latitude
- 
+
 ## double sext2obs(Hs, ie, h, T, P, HP)
 Compute sextant altitude.
 
 # planets.c
 Find the coordinates of the Planets, from Astronomical Formulae for
 Calculators, by Jean Meeus, 4th edition, chapter 23.
- 
+
 Meeus also gives formulae for computing the positions relative
 to the standard ecliptics of 1950 and 2000, but I don't feel
 like doing that right now.
- 
+
 Planetary orbits are described by these terms:
- 
+
 * L = mean longitude of planet
 * a = semimajor axis of the orbit (a constant for each planet)
 * e = eccentricity of orbit
 * i = inclination on the plane of the ecliptic
 * w = argument of perihelion
 * omega = longitude of ascending node
- 
+
 * pi = longitude of perihelion = w + omega
 * M = mean anomaly = L - pi
 * q = perihelion distance = a\*(1-e)
 * Q = aphelion distance = a\*(1+e)
- 
+
 Note: elements for longitude of perihelion taken from "ephem"
 by Elwood Charles Downey.  These are probably just the sum of the
 longitude of ascending node and argument of perihelion, but I don't
@@ -301,16 +301,16 @@ defined in `astro.h`
 # sun.c
 Find the coordinates of the Sun, from Astronomical Formulae for Calculators,
 by Jean Meeus, 4th edition, chapter 18.
- 
+
 References:
- 
+
 1. Astronomical Formulae for Calculators, * by Jean Meeus, 4th edition
 1. Astronomical Algorithms by Jean Meeus, 2nd edition.
- 
+
 Meeus also gives formulae for computing the Sun's position relative
 to the standard ecliptic of 1950, but I don't feel like doing that
 right now.
- 
+
 These functions return the mean position of the Sun.  I have not
 written any code for the apparent position.
 
@@ -319,12 +319,12 @@ written any code for the apparent position.
 ## void SunEcliptic(double jdate, double \*lat, double \*lon, double \*rad)
 
 Return lat,lon,radius from the date.  lat,lon are in degrees,
-radius is in AU.  This is the Sun's coordinates relative to 
-the Earth in ecliptic coordinates.  Take the complement of 
+radius is in AU.  This is the Sun's coordinates relative to
+the Earth in ecliptic coordinates.  Take the complement of
 lat,lon to get the Earth's coordinates relative to the Sun.
 Note: by definition, lat is always 0 for the mean ecliptic,
 but I may change this function later to include perturbations.
- 
+
 ## void      SunEquatorial(double jdate, double \*decl, double \*RA, double \*rad)
 
 Return declination, right ascension and distance of the
@@ -353,7 +353,7 @@ Convert spherical (e.g. ecliptic) coordinates to rectangular
 
 ## void rect2polar(X,Y,Z, lat,lon,R)
 Convert rectangular coordinates to spherical (e.g. ecliptic)
-                   
+
 ## void deltaPolar(lat1,lon1,r1, lat2,lon2,r2, lat3,lon3,r3)
 
 given polar coordinates of two objects, find the bearing

@@ -117,7 +117,7 @@ main(argc, argv)
 
 	printf("Object     lat         lon          r          decl        RA        dist") ;
 	if( hourAngles )
-	  printf("	SHA	GHA") ;
+	  printf("	SHA       GHA") ;
 	putchar('\n') ;
 
 	Earth(jdate, &earthState) ;

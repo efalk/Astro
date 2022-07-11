@@ -11,12 +11,15 @@
  *
  * char *
  * julian2ymdStr(double jdate)
+ *  Convert Julian date to e.g. "11-Jul-2022"
  *
  * char *
  * julian2hmsStr(double jdate)
+ *  Convert Julian date to e.g. "16:04:16"
  *
  * char *
  * julian2str(double jdate)
+ *  Convert Julian date to e.g. "11-Jul-2022 16:04:16"
  *
  * char *
  * deg2dmsStr(double degrees)

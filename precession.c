@@ -12,7 +12,7 @@
  * References:
  *
  * [1] Astronomical Formulae for Calculators, * by Jean Meeus, 4th edition
- * [2] Atronomical Algorithms by Jean Meeus, 2nd edition.
+ * [2] Astronomical Algorithms by Jean Meeus, 2nd edition.
  *
  * Nutation is the small elliptical wobble in the Earth's axis caused
  * by the Moon and other influences.  Nutation has a period of about 18.6

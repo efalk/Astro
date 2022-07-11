@@ -12,7 +12,7 @@
  * References:
  *
  * [1] Astronomical Formulae for Calculators, * by Jean Meeus, 4th edition
- * [2] Atronomical Algorithms by Jean Meeus, 2nd edition.
+ * [2] Astronomical Algorithms by Jean Meeus, 2nd edition.
  *
  * Meeus also gives formulae for computing the Sun's position relative
  * to the standard ecliptic of 1950, but I don't feel like doing that

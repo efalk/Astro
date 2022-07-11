@@ -72,7 +72,7 @@
  *    Altitude: angle above the horizon
  *
  *    Azimuth: angle along the horizon, measured to the right of North
- *	(sometimes South, depending on author.)  0° = North, 90° = East,
+ *	(sometimes South, depending on author.)  0Â° = North, 90Â° = East,
  *	etc.
  *
  *    Hour Angle: an object's angle west of the meridian, measured in h:m:s.
@@ -167,7 +167,7 @@
  *    The 24 hour day is only an average over the year.
  *
  *    Sidereal Day:  Time for the earth to rotate one full rotation
- *	relative to the vernal equinox.  23:56:4.099
+ *	relative to the vernal equinox.  23:56:04.099
  *
  *    Sidereal Time: hours since the vernal equinox passed overhead.
  *	(= right ascension of meridean = hour angle of vernal equinox)
