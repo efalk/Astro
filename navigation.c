@@ -1,4 +1,5 @@
 
+#include <stdio.h>
 #include <sys/types.h>
 #include <time.h>
 #include <math.h>
@@ -36,8 +37,7 @@
   /* convert right ascension (hours) to sidereal hour angle (degrees) */
 
 double
-ra2sha(ra)
-  double ra ;
+ra2sha(double ra)
 {
   return limitAngle( -15. * ra ) ;
 }
@@ -46,8 +46,7 @@ ra2sha(ra)
   /* convert sidereal hour angle and time to grenwhich hour angle */
 
 double
-sha2gha(sha, jdate)
-  double sha, jdate ;
+sha2gha(double sha, double jdate)
 {
   return limitAngle( sha + 15.*time2sidereal(jdate) ) ;
 }
@@ -56,8 +55,7 @@ sha2gha(sha, jdate)
   /* convert grenwhich hour angle and longitude to local hour angle */
 
 double
-gha2lha(sha, lon)
-  double sha, lon ;
+gha2lha(double sha, double lon)
 {
   return sha + lon ;
 }
@@ -66,8 +64,7 @@ gha2lha(sha, lon)
   /* convert two hourly values and time in hours to intermediate value */
 
 double
-interpolate(a,b, time)
-  double a,b, time ;
+interpolate(double a, double b, double time)
 {
   time -= (int) time ;
   return a + (b-a)*time ;
@@ -80,9 +77,7 @@ interpolate(a,b, time)
  */
 
 void
-altaz(lha, decl, lat, alt, az)
-  double lha, decl, lat ;
-  double *alt, *az ;
+altaz(double lha, double decl, double lat, double *alt, double *az)
 {
   double s,c,Hc ;
   double cHc, x, a, z ;
@@ -123,13 +118,7 @@ altaz(lha, decl, lat, alt, az)
    */
 
 double
-sext2obs(Hs, ie, h, T, P, HP)
-  double Hs ;	/* raw sextant reading */
-  double ie ;	/* index error */
-  double h ;	/* height above sea level, meters */
-  double T ;	/* temperature, °C, if known, else 0. */
-  double P ;	/* pressure, mb, if known, else 0. */
-  double HP ;	/* horizontal parallax; see almanac.  0 for stars. */
+sext2obs(double Hs, double ie, double h, double T, double P, double HP)
 {
   double D ;	/* compute dip from height */
   double H ;	/* compute apparent altitude */
@@ -178,13 +167,14 @@ sext2obs(Hs, ie, h, T, P, HP)
 
 
 #ifdef	STANDALONE
+int
 main()
 {
   double jdate, time, ra, sha, gha, lha ;
   double decl, dist ;
   double lat, lon ;
   double alt, az ;
-  double Hs, Ho ;
+  double Ho ;
 
   jdate = time2julian(1999,11,16, 20,13,25.) ;
   time = hms2h(20,13,25.) ;
@@ -236,7 +226,6 @@ main()
   Ho = sext2obs(49.6083, 0., 5.4, -3., 982., 0.) ;
   printf("Ho = %.4f\n", Ho) ;
 
-
-  exit(0) ;
+  return 0;
 }
 #endif	/* STANDALONE */
