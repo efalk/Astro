@@ -11,6 +11,8 @@
 
 /**
  * convert hours to "hh:mm:ss.ssss"
+ * Returns a buffer that will become invalid the next time this
+ * function is called. Not thread-safe.
  */
 const char *
 convertHms(double hours)
@@ -26,8 +28,9 @@ static	char	obuf[80] ;
 }
 
 
-	/* convert hours (or degrees) to hours:minutes:seconds */
-
+/**
+ * convert hours (or degrees) to hours:minutes:seconds
+ */
 void
 h2hms(hours, h,m,s)
 	double	hours ;
@@ -40,14 +43,15 @@ h2hms(hours, h,m,s)
 }
 
 
-
 void
 printHms(double hours)
 {
 	printf("%s\n", convertHms(hours)) ;
 }
 
-
+/**
+ * Convert spherical coordinates to rectangular
+ */
 void
 polar2rect(lat, lon, R, X,Y,Z)
 	double	lat,lon,R ;
@@ -61,7 +65,9 @@ polar2rect(lat, lon, R, X,Y,Z)
 	*Z = R*sin(lat) ;
 }
 
-
+/**
+ * Convert rectangular coordinates to spherical
+ */
 void
 rect2polar(X,Y,Z, lat,lon,R)
 	double	X,Y,Z ;
@@ -78,10 +84,10 @@ rect2polar(X,Y,Z, lat,lon,R)
 
 
 
-	/* given polar coordinates of two objects, find the bearing
-	 * and distance of object2 relative to object1
-	 */
-
+/**
+ * given polar coordinates of two objects, find the bearing
+ * and distance of object2 relative to object1
+ */
 void
 deltaPolar(lat1,lon1,r1, lat2,lon2,r2, lat3,lon3,r3)
 	double	lat1,lon1,r1 ;
