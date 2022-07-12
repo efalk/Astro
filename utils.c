@@ -1,5 +1,6 @@
 
 #include <stdio.h>
+#include <string.h>
 #include <sys/types.h>
 #include <time.h>
 #include <math.h>
@@ -136,4 +137,54 @@ limitHour(double h)
     return 24 - limitHour(-h);
   }
   return h;
+}
+
+/**
+ * Extract a float field from the given buffer
+ * @param buffer - buffer to extract the field from
+ * @param start  - index of first character, 1-based
+ * @param end    - index of last character, inclusive
+ */
+double
+recFloat(const char *buffer, int start, int end)
+{
+    double rval = 0;
+    char tmp[80];
+    recString(buffer, start, end, tmp);
+    sscanf(tmp, "%lf", &rval);
+    return rval;
+}
+
+/**
+ * Extract a long field from the given buffer
+ * @param buffer - buffer to extract the field from
+ * @param start  - index of first character, 1-based
+ * @param end    - index of last character, inclusive
+ */
+long
+recLong(const char *buffer, int start, int end)
+{
+    long rval = 0;
+    char tmp[80];
+    recString(buffer, start, end, tmp);
+    sscanf(tmp, "%ld", &rval);
+    return rval;
+}
+
+/**
+ * Extract a string from the given buffer
+ * @param buffer - buffer to extract the field from
+ * @param start  - index of first character, 1-based
+ * @param end    - index of last character, inclusive
+ * @param tmp    - caller-supplied buffer to receive string
+ *
+ * Caller is responsible for making sure tmp[] is at least
+ * (end-start+1) characters.
+ */
+char *
+recString(const char *buffer, int start, int end, char *tmp)
+{
+    memcpy(tmp, buffer+start-1, end-start+1);
+    tmp[end-start+1] = '\0';
+    return tmp;
 }

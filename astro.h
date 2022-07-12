@@ -315,16 +315,36 @@ typedef	struct {
 	} PlanetState ;
 
 
-	/* this structure describes items in the Yale Star Catalog */
-
+/**
+ * This structure describes items in a star catalog. Think of this
+ * as the "base class" for the other databases.
+ */
 typedef	struct {
-	  long	ra ;		/* right ascension, seconds of arc, not time */
-	  long	dec ;		/* declination, seconds of arc */
-	  int	mag ;		/* magnitude * 100 */
-	  char	type[2] ;	/* object type */
+	  double ra;		/* right ascension, degrees */
+	  double dec;		/* declination, degrees */
+	  double mag ;		/* magnitude */
+	  int	epoch;		/* epoch, typically 1950 or 2000 */
+	  double pmr;		/* proper motion, right ascension */
+	  double pmd;		/* proper motion, declination */
+	  char	type[3] ;	/* object type, e.g. "SS" */
 	  char	spec[2] ;	/* spectral type */
-	  char	cons[3] ;	/* constellation */
+	  long	sao;		/* SAO catalog # */
 	  char	*name ;		/* name, if any, or NULL */
+	} Star ;
+
+/**
+ * This structure describes items in the Yale Star Catalog
+ * The Yale Star Catalog, also known as the Bright Star Catalog
+ * can be downloaded from http://tdc-www.harvard.edu/catalogs/bsc5.html
+ *
+ * See also https://heasarc.gsfc.nasa.gov/W3Browse/star-catalog/bsc5p.html,
+ * although for the life of me I haven't been able to figure out how
+ * download it from NASA.
+ */
+typedef	struct {
+	  Star s;		/* base class, see above */
+	  char	cons[3] ;	/* constellation */
+	  int	yale_cat;	/* Yale catalog # */
 	} YaleStar ;
 
 	/* types */
@@ -415,6 +435,11 @@ extern	void	Moon(double date, PlanetState *p) ;
 	/* star databases */
 extern	int	ReadPPMStars(int maxmag, long ra0, long ra1, long d0, long d1,
 			double jd, char *filename, PPMStar **rptr) ;
+extern	int	ReadYaleStars(float maxmag, double ra0, double ra1,
+		    double d0, double d1,
+		    const char *datfilename,
+		    const char *notefilename,
+		    YaleStar **rval, size_t *recsize);
 
 	/* navigation */
 
@@ -444,6 +469,10 @@ extern	double	limitHour(double angle) ;
 extern	const char *convertHms(double hours);
 extern	const char *convertDms(double hours);
 extern	void	printHms(double hours);
+
+extern	double	recFloat(const char *buffer, int start, int end);
+extern	long	recLong(const char *buffer, int start, int end);
+extern	char *	recString(const char *buffer, int start, int end, char *tmp);
 
 	/* I/O */
 

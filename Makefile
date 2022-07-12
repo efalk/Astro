@@ -5,7 +5,7 @@ CFLAGS = -O
 LIBS = -lm
 
 SRCS = coords.c dates.c utils.c precession.c kepler.c sun.c planets.c \
-	moon.c stars.c io.c navigation.c
+	moon.c stars.c io.c navigation.c yale.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -29,6 +29,9 @@ dates:	dates.c utils.o libastro.a
 
 navigation:	navigation.c libastro.a
 	$(CC) $(CFLAGS) -DSTANDALONE -o navigation navigation.c libastro.a $(LIBS)
+
+yale:	yale.c libastro.a
+	$(CC) $(CFLAGS) -DSTANDALONE -o yale yale.c libastro.a $(LIBS)
 
 
 tags: $(SRCS) $(HDRS)
